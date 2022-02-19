@@ -18,19 +18,19 @@ $thisfile=$n[$nu];
 
 
 $connectt = mysqli_connect($host,$user,$pass);
-       mysqli_select_db($connectt,$db); 
-       
+       mysqli_select_db($connectt,$db);
+
 global $connectt;
-       
+
 
 $xorder = $_GET['xorder'];
 $xsort  = $_GET['xsort'];
-if(empty($xorder))   $xorder = "id"; 
-if(empty($xsort))    $xsort  = "DESC"; 
+if(empty($xorder))   $xorder = "id";
+if(empty($xsort))    $xsort  = "DESC";
 $max = 40; //records per page
 $p = $_GET['p'];
 if(empty($p)) {	$p = 1;	}
-$limits = ($p - 1) * $max; 
+$limits = ($p - 1) * $max;
 
 
 
@@ -71,14 +71,14 @@ if (isset($_REQUEST['del'])) {
 
         echo "
 		<html>
-		
+
 		<title>My Bookmarks</title>
 		<style>
 			a:link     {color:#34a3d1; text-decoration: none}
 			a:visited  {color:#34a3d1; text-decoration: none}
 			a:active   {color:#34a3d1; text-decoration: none}
 			a:hover    {color:#000000; background-color:#cccccc;}
-			form { display:inline; } 
+			form { display:inline; }
 		</style>
 		<body onLoad='document.xxDel.text_pass.focus()' bgcolor='#F6F6F6' >
         <center>
@@ -97,15 +97,16 @@ if (isset($_REQUEST['del'])) {
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<input type='submit' name='boton_cancel' value='Cancel'>
 		</form>
-	
+
 		</center>
 		";
 		die();
 
-	}		
+	}
 }
 #---------------------------------------------------------------------------------------------------------------------#
-if (isset($_POST['boton_delete'])) {
+
+if (isset($_POST['boton_delete']))    {
     global $connectt;
 		$id      = $_POST['id'];
 		$p       = $_POST['page'];
@@ -118,6 +119,7 @@ if (isset($_POST['boton_delete'])) {
 	    echo "<script>window.location='{$ruta}'</script>";
 	}
 }
+
 #---------------------------------------------------------------------------------------------------------------------#
 if (isset($_POST['boton_cancel'])) {
     global $connectt;
@@ -141,21 +143,21 @@ if (isset($_REQUEST['edit'])) {
 		$comments = $r['comments'];
 		echo "
 
-		
+
 		<html>
-		
+
 		<title>My Bookmarks</title>
 		<style>
 			a:link     {color:#34a3d1; text-decoration: none}
 			a:visited  {color:#34a3d1; text-decoration: none}
 			a:active   {color:#34a3d1; text-decoration: none}
 			a:hover    {color:#000000; background-color:#cccccc;}
-			form { display:inline; } 
+			form { display:inline; }
 		</style>
 		<body onLoad='document.xPost.nUrl.focus()' bgcolor='#F6F6F6' >
 
-	
-		
+
+
 		<form name='xPost' method='POST' action='$thisfile'  >
 			<input type='hidden' name='boton_edit' value=''>
 			<input type='hidden' name='idd' value='$id'>
@@ -164,7 +166,7 @@ if (isset($_REQUEST['edit'])) {
 			<font face='Arial'><span style='font-size:9pt;'><b>Name:</b></span></font> <input type='text' name='nTitulo' size='15'  value='$title' style='color:black; background-color:rgb(173,203,231);' >
 			<font face='Arial'><span style='font-size:9pt;'><b>Comments:</b></span></font>  <input type='text' name='nComentario' size='15' value='$comments'  style='color:black; background-color:rgb(173,203,231);' >
 			<input type='submit' name='boton_edit' value='Update'><br>
-		</form>		
+		</form>
 			";
     }
 die();
@@ -172,9 +174,9 @@ die();
 #---------------------------------------------------------------------------------------------------------------------#
 if (isset($_POST['boton_edit'])) {
     global $connectt;
-		$p        = $_POST['page'];		
-		$recno    = $_REQUEST['xedit'];		
-		$kid      = $_POST['idd'];		
+		$p        = $_POST['page'];
+		$recno    = $_REQUEST['xedit'];
+		$kid      = $_POST['idd'];
 		$kName    = $_POST['nTitulo'];
 		$kURL     = $_POST['nUrl'];
 		$kComment = $_POST['nComentario'];
@@ -191,8 +193,8 @@ if (isset($_POST['boton_edit'])) {
 if (isset($_POST['boton_search'])) {
     global $connectt;
 		$p        = 1;
-		$q        = $_POST['q'];		
-	    $trimmed  = trim($q); 
+		$q        = $_POST['q'];
+	    $trimmed  = trim($q);
 		if ($trimmed == ""){ echo"<script>alert('Write a word to search');</script>"; }
 }
 #---------------------------------------------------------------------------------------------------------------------#
@@ -224,7 +226,7 @@ $show = xshow($limits,$max,$p,$trimmed,$thisfile,$xorder,$xsort);
 function xshow($limits,$max,$p,$trimmed,$thisfile,$xorder,$xsort){
 global $connectt;
 
-            if (isset($_POST['boton_search'])) {	
+            if (isset($_POST['boton_search'])) {
 				$query = "
 				select * from links_links
 				where (
@@ -233,43 +235,43 @@ global $connectt;
 				or url         like convert( _utf8 '%$trimmed%' using latin1 ) collate latin1_swedish_ci
 				or comments    like convert( _utf8 '%$trimmed%' using latin1 ) collate latin1_swedish_ci
 				or timestamp   like convert( _utf8 '%$trimmed%' using latin1 ) collate latin1_swedish_ci
-				 ) 
+				 )
 				ORDER BY id DESC limit 0,999999999";
-				$sql = mysqli_query($connectt, $query); 	
+				$sql = mysqli_query($connectt, $query);
 				$num_rows = mysqli_num_rows($sql);
-			}else{	
+			}else{
 		    	$query = "SELECT * FROM links_links ORDER BY ". $xorder." ". $xsort ." LIMIT ".$limits.",$max";
-       			$sql = mysqli_query($connectt, $query); 	
+       			$sql = mysqli_query($connectt, $query);
 				$num_rows = mysqli_num_rows($sql);
 			}
 
         $myresult = $connectt->query("SELECT id FROM links_links ORDER BY id");
         $totalres = $myresult->num_rows;
 
-		$totalpages = ceil($totalres / $max);  
+		$totalpages = ceil($totalres / $max);
 				echo "
 				<html>
-				
+
 				<title>My Bookmarks</title>
 				<style>
 					a:link     {color:#34a3d1; text-decoration: none}
 					a:visited  {color:#34a3d1; text-decoration: none}
 					a:active   {color:#34a3d1; text-decoration: none}
 					a:hover    {color:#000000; background-color:#cccccc;}
-                    form { display:inline; } 
+                    form { display:inline; }
 				</style>
 				<body onLoad='document.fsearch.q.focus()' bgcolor='#F6F6F6' >
 				";
 
 		echo"
-		
+
 			<form name='xName' method='POST' action='$thisfile' >
 				<input type='hidden' name='boton_add' value=''>
 				<font face='Arial'><span style='font-size:9pt;'><b>URL:</b></span></font>  <input type='text' name='nUrl' size='30' value='http://www.'  >
 				<font face='Arial'><span style='font-size:9pt;'><b>Name:</b></span></font> <input type='text' name='nTitulo' size='15'>
 				<font face='Arial'><span style='font-size:9pt;'><b>Comments:</b></span></font>  <input type='text' name='nComentario' size='15'>
 				<input type='submit' name='boton_add' value='Add'>
-			</form>	
+			</form>
 
 			<form name='fsearch' method='POST' action='$thisfile' >
 				<input type='hidden' name='boton_search' value=''>
@@ -277,7 +279,7 @@ global $connectt;
 				<input type='hidden' name='pagesss' value='$psss'>
 				<font face='Arial'><span style='font-size:9pt;'></span></font>  <input type='text' name='q' size='10' value='$q' style='color:black; background-color:rgb(173,203,231);' >
 				<input type='submit' name='boton_search' value='Search'>
-			</form>	
+			</form>
 
 			<font face='Arial'><span style='font-size:9pt;'><a href='$thisfile'><b>Home</b></a></span></font>
 
@@ -286,7 +288,7 @@ global $connectt;
 			<br><br>
 			";
 
-        if (!isset($_POST['boton_search'])) {	
+        if (!isset($_POST['boton_search'])) {
 		  $callfunction = pagination($totalpages, $p, $i,$xorder,$xsort);
 		}
 
@@ -312,7 +314,7 @@ global $connectt;
 			<td bgcolor='#ADCBE7' style='border-width:1pt; border-color:rgb(129,162,196); border-style:none;'><font face='Arial'><span style='font-size:9pt;'><b><a href='$thisfile?sort&xorder=timestamp&xsort=$xsort&page=$p'>Date</a></b></span></font></td>
 			<td align='center' bgcolor='#ADCBE7' style='border-width:1pt; border-color:rgb(129,162,196); border-style:none;'> </td>
 			<td bgcolor='#ADCBE7' style='border-width:1pt; border-color:rgb(129,162,196); border-style:none;'><font face='Arial'><span style='font-size:9pt;'><b>&nbsp;</b></span></font></td>
-		</tr>		
+		</tr>
 		";
 
 
@@ -336,10 +338,10 @@ global $connectt;
 
 				<tr>
 				";
-			$i++;	
+			$i++;
 			}
 			echo "</tr></table>";
-				if (!isset($_POST['boton_search'])) {	
+				if (!isset($_POST['boton_search'])) {
 				  $callfunction = pagination($totalpages, $p, $i,$xorder,$xsort);
 				}
 }
@@ -352,7 +354,7 @@ global $connectt;
 function pagination($totalpages, $p, $i,$xorder,$xsort) {
     global $connectt;
 	if($p != 1)	{$pant = $p-1; echo "<span style='font-size:9pt;'><font face='Arial' color='#999999'><a href='$thisfile?p=$pant&xorder=$xorder&xsort=$xsort'><b>Previous</b></a>&nbsp;</span></font>";}
-	for($i = 1; $i <= $totalpages; $i++){  
+	for($i = 1; $i <= $totalpages; $i++){
 		if($p == $i){
 		   echo "<span style='font-size:12pt;'><font face='Arial' color='#00000'><b>$i</b>&nbsp;</span></font>";
 		}else{
